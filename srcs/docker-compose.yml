@@ -1,0 +1,52 @@
+version: '3.9'
+
+networks:
+  wordpress-network:
+    driver: bridge
+
+services:
+  db:
+    build: ./requirements/mariadb
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - /home/fyuta/data/mariadb:/var/lib/mysql
+      - /home/fyuta/data/log/mariadb:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - wordpress-network
+
+  nginx:
+    build: ./requirements/nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - wordpress
+    volumes:
+      - /home/fyuta/data/wordpress/src:/var/www/html
+      - /home/fyuta/data/log/nginx:/var/log/nginx
+    networks:
+      - wordpress-network
+
+  wordpress:
+    build: ./requirements/wordpress
+    volumes:
+      - /home/fyuta/data/wordpress/src:/var/www/html
+      - /home/fyuta/data/log/php:/var/log/php
+    restart: always
+    depends_on:
+      - mariadb
+    ports:
+      - "9000:80"
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    networks:
+      - wordpress-network
