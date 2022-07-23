@@ -6,7 +6,7 @@ networks:
 
 services:
   db:
-    build: ./requirements/mariadb
+    build: requirements/mariadb
     ports:
       - "3306:3306"
     restart: always
@@ -22,9 +22,11 @@ services:
       - wordpress-network
 
   nginx:
-    build: ./requirements/nginx
+    build: requirements/nginx
     ports:
-      - 8080:80
+      - "8080:80"
+      - "443:443"
+      - "80:80"
     depends_on:
       - wordpress
     volumes:
