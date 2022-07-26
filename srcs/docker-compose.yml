@@ -7,6 +7,7 @@ networks:
 services:
   db:
     build: requirements/mariadb
+    init: true
     ports:
       - "3306:3306"
     restart: always
@@ -23,6 +24,7 @@ services:
 
   nginx:
     build: requirements/nginx
+    init: true
     ports:
       - "8080:80"
       - "443:443"
@@ -37,6 +39,7 @@ services:
 
   wordpress:
     build: ./requirements/wordpress
+    init: true
     volumes:
       - /home/fyuta/data/wordpress/src:/var/www/html
       - /home/fyuta/data/log/php:/var/log/php

@@ -8,10 +8,6 @@ up:
 down:
 	docker-compose -f ${FILE} down
 
-# stop and delete containers
-down:
-	docker-compose -f ${FILE} rm
-
 # restart containers
 re:
 	docker-compose -f ${FILE} restart
