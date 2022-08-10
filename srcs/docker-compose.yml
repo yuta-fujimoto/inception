@@ -6,11 +6,11 @@ networks:
 
 services:
   db:
+    container_name: db
     build: requirements/mariadb
     init: true
     ports:
       - "3306:3306"
-    restart: always
     volumes:
       - /home/fyuta/data/mariadb:/var/lib/mysql
       - /home/fyuta/data/log/mariadb:/var/log/mysql
@@ -22,23 +22,35 @@ services:
     networks:
       - wordpress-network
 
+  redis:
+    container_name: redis
+    build: requirements/bonus/redis
+    init: true
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - wordpress-network
+
   nginx:
+    container_name: nginx
     build: requirements/nginx
     init: true
     ports:
-      - "8080:80"
       - "443:443"
-      - "80:80"
     depends_on:
       - wordpress
     volumes:
       - /home/fyuta/data/wordpress/src:/var/www/html
       - /home/fyuta/data/log/nginx:/var/log/nginx
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
     networks:
       - wordpress-network
 
   wordpress:
-    build: ./requirements/wordpress
+    container_name: wordpress
+    build: requirements/wordpress
     init: true
     volumes:
       - /home/fyuta/data/wordpress/src:/var/www/html
@@ -46,12 +58,22 @@ services:
     restart: always
     depends_on:
       - mariadb
+      - redis
     ports:
-      - "9000:80"
+      - "9000:9000"
     environment:
       WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      REDIS_HOST: ${REDIS_HOST}
     networks:
       - wordpress-network
+
+  # ftp:
+  #   container_name: ftp
+  #   build: requirements/bonus/ftp
+  #   init: true
+  #   ports:
+  #     - "21:21"
+

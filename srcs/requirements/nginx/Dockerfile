@@ -1,15 +1,21 @@
-FROM nginx:stable-alpine
+FROM alpine:3.15.5
 
-RUN apk update && apk upgrade && apk add --no-cache openssl
-
-RUN mkdir /etc/nginx/ssl
+RUN apk update && apk upgrade && \
+        apk add --no-cache openssl && \
+        apk add nginx && \
+        apk add gettext
+RUN mkdir -p /etc/nginx/ssl
 RUN openssl req -x509 -newkey rsa:4096 -sha256 -nodes -days 365 \
-        -keyout /etc/nginx/ssl/fyuta.42.fr.key \
-        -out /etc/nginx/ssl/fyuta.42.fr.crt \
+        -keyout /etc/nginx/ssl/server.key \
+        -out /etc/nginx/ssl/server.crt \
         -subj "/C=JA/ST=Kanagawa/L=Yokohanma/O=42Tokyo/OU=Org/CN=fyuta.42.fr"
+RUN mkdir -p /var/html/www/admire
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY conf/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY conf/.htpasswd /etc/nginx/.htpasswd
+
+RUN /bin/sh -c "envsubst '$$DOMAIN_NAME' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf"
+RUN rm /etc/nginx/conf.d/default.conf.template
 
 CMD ["nginx", "-g", "daemon off;"]
