@@ -1,6 +1,6 @@
 FROM alpine:3.15.5
 
-RUN apk add openrc \
+RUN apk add --update-cache openrc \
   php7 \
   php7-fpm \
   php7-common \
@@ -32,7 +32,4 @@ COPY ./conf/.htaccess /var/www/html
 COPY ./conf/www.conf /etc/php7/php-fpm.d/www.conf
 COPY ./conf/php-fpm.conf /etc/php7/php-fpm.conf
 
-CMD [ "php-fpm7" ]
-
-# PID 1 simulation
-# CMD ["sleep", "100"]
+ENTRYPOINT [ "php-fpm7" ]

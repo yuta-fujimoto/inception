@@ -1,7 +1,6 @@
 FROM alpine:3.15.5
 
-RUN apk update && apk upgrade && \
-        apk add --no-cache openssl && \
+RUN apk add --update-cache openssl && \
         apk add nginx && \
         apk add gettext
 RUN mkdir -p /etc/nginx/ssl
