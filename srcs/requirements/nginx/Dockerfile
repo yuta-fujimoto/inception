@@ -19,4 +19,5 @@ RUN chown nginx:nginx /etc/nginx/.htpasswd
 RUN /bin/sh -c "envsubst '$$DOMAIN_NAME' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf"
 RUN rm /etc/nginx/conf.d/default.conf.template
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "nginx" ]
+CMD [ "-g", "daemon off;" ]

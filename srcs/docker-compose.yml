@@ -69,11 +69,4 @@ services:
       REDIS_HOST: ${REDIS_HOST}
     networks:
       - wordpress-network
-
-  # ftp:
-  #   container_name: ftp
-  #   build: requirements/bonus/ftp
-  #   init: true
-  #   ports:
-  #     - "21:21"
-
+      

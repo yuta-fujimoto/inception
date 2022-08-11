@@ -4,4 +4,5 @@ RUN apk --update-cache add redis
 
 COPY conf/redis.conf /etc/redis.conf
 
-CMD [ "redis-server", "/etc/redis.conf" ]
+ENTRYPOINT [ "redis-server" ]
+CMD [ "/etc/redis.conf" ]

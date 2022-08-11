@@ -3,7 +3,7 @@ FROM alpine:3.15.5
 RUN apk add openrc \
   php7 \
   php7-fpm \
-  php7-common\
+  php7-common \
   php7-session \
   php7-iconv \
   php7-json \
@@ -32,7 +32,7 @@ COPY ./conf/.htaccess /var/www/html
 COPY ./conf/www.conf /etc/php7/php-fpm.d/www.conf
 COPY ./conf/php-fpm.conf /etc/php7/php-fpm.conf
 
-ENTRYPOINT [ "php-fpm7" ]
+CMD [ "php-fpm7" ]
 
 # PID 1 simulation
 # CMD ["sleep", "100"]
