@@ -14,6 +14,7 @@ RUN mkdir -p /var/html/www/admire
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY conf/.htpasswd /etc/nginx/.htpasswd
+RUN chown nginx:nginx /etc/nginx/.htpasswd
 
 RUN /bin/sh -c "envsubst '$$DOMAIN_NAME' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf"
 RUN rm /etc/nginx/conf.d/default.conf.template

@@ -57,7 +57,7 @@ services:
       - /home/fyuta/data/log/php:/var/log/php
     restart: always
     depends_on:
-      - mariadb
+      - db
       - redis
     ports:
       - "9000:9000"
