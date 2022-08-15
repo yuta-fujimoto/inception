@@ -38,8 +38,6 @@ services:
     init: true
     ports:
       - "443:443"
-    depends_on:
-      - wordpress
     volumes:
       - /home/fyuta/data/wordpress/src:/var/www/html
       - /home/fyuta/data/log/nginx:/var/log/nginx
@@ -56,9 +54,6 @@ services:
       - /home/fyuta/data/wordpress/src:/var/www/html
       - /home/fyuta/data/log/php:/var/log/php
     restart: always
-    depends_on:
-      - db
-      - redis
     ports:
       - "9000:9000"
     environment:
