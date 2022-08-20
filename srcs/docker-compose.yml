@@ -5,15 +5,16 @@ networks:
     driver: bridge
 
 services:
-  db:
-    container_name: db
+  mariadb:
+    container_name: mariadb
     build: requirements/mariadb
     init: true
     ports:
       - "3306:3306"
     volumes:
-      - /home/fyuta/data/mariadb:/var/lib/mysql
-      - /home/fyuta/data/log/mariadb:/var/log/mysql
+      - type: volume
+        source: mariadb
+        target: /var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -39,8 +40,9 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/fyuta/data/wordpress/src:/var/www/html
-      - /home/fyuta/data/log/nginx:/var/log/nginx
+      - type: volume
+        source: wordpress
+        target: /var/www/html
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
     networks:
@@ -51,8 +53,9 @@ services:
     build: requirements/wordpress
     init: true
     volumes:
-      - /home/fyuta/data/wordpress/src:/var/www/html
-      - /home/fyuta/data/log/php:/var/log/php
+      - type: volume
+        source: wordpress
+        target: /var/www/html
     restart: always
     ports:
       - "9000:9000"
@@ -64,4 +67,20 @@ services:
       REDIS_HOST: ${REDIS_HOST}
     networks:
       - wordpress-network
-      
+
+volumes:
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/fyuta/data/mariadb/'
+
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/fyuta/data/wordpress/src'
