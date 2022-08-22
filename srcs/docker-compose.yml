@@ -1,7 +1,7 @@
 version: '3.9'
 
 networks:
-  wordpress-network:
+  inception-network:
     driver: bridge
 
 services:
@@ -21,7 +21,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
-      - wordpress-network
+      - inception-network
 
   redis:
     container_name: redis
@@ -31,7 +31,7 @@ services:
       - "6379:6379"
     restart: always
     networks:
-      - wordpress-network
+      - inception-network
 
   nginx:
     container_name: nginx
@@ -46,7 +46,7 @@ services:
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
     networks:
-      - wordpress-network
+      - inception-network
 
   wordpress:
     container_name: wordpress
@@ -66,7 +66,7 @@ services:
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
       REDIS_HOST: ${REDIS_HOST}
     networks:
-      - wordpress-network
+      - inception-network
 
 volumes:
   mariadb:
